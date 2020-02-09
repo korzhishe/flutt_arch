@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 
 class MockDataConnectionChecker extends Mock implements DataConnectionChecker {}
 
-main(List<String> args) {
+main() {
   NetworkInfo networkInfo;
   MockDataConnectionChecker mockDataConnectionChecker;
 
@@ -22,7 +22,6 @@ main(List<String> args) {
 
       final result = networkInfo.isConnected;
 
-      verifyZeroInteractions(mockDataConnectionChecker);
       verify(mockDataConnectionChecker.hasConnection);
       expect(result, tHasConnectionFuture);
     });
