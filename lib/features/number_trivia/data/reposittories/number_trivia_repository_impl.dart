@@ -6,6 +6,7 @@ import 'package:flutter_architect/features/number_trivia/data/datasources/number
 import 'package:flutter_architect/features/number_trivia/data/datasources/number_trivia_remote_data_source.dart';
 import 'package:flutter_architect/features/number_trivia/domain/entities/number_trivia.dart';
 import 'package:flutter_architect/features/number_trivia/domain/repositories/number_trivia_repository.dart';
+import 'package:flutter_architect/core/error/exception.dart';
 
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
@@ -17,11 +18,23 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
     @required this.localDataSource,
     @required this.networkInfo,
   });
-  
+
   @override
-  Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(int number) {
-    // TODO: implement getConcreteNumberTrivia
-    throw UnimplementedError();
+  Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
+      int number) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteTrivia =
+            await remoteDataSource.getConcreteNumberTrivia(number);
+        localDataSource.cacheNumberTrivia(remoteTrivia);
+        return Right(remoteTrivia);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      final localTrivia = await localDataSource.getLastNumberTrivia();
+      return Right(localTrivia);
+    }
   }
 
   @override
