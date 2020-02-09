@@ -3,5 +3,5 @@ import 'package:flutter_architect/features/number_trivia/data/models/number_triv
 abstract class NumberTriviaRemoteDataSource {
   Future<NumberTriviaModel> getConcreteNumberTrivia(int number);
 
-  Future<NumberTriviaModel> getRandomeNumberTrivia();
+  Future<NumberTriviaModel> getRandomNumberTrivia();
 }
