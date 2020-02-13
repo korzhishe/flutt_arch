@@ -37,3 +37,28 @@ class NumberTriviaLocalDataSourceImpl implements NumberTriviaLocalDataSource {
     }
   }
 }
+
+class NumberTriviaHiveDataSourceImpl implements NumberTriviaLocalDataSource {
+  final SharedPreferences sharedPreferences;
+
+  NumberTriviaLocalDataSourceImpl({@required this.sharedPreferences});
+
+  @override
+  Future<void> cacheNumberTrivia(NumberTriviaModel triviaToCache) {
+    return sharedPreferences.setString(
+      CACHED_NUMBER_TRIVIA,
+      json.encode(triviaToCache.toJson()),
+    );
+  }
+
+  @override
+  Future<NumberTriviaModel> getLastNumberTrivia() {
+    final jsonString = sharedPreferences.getString(CACHED_NUMBER_TRIVIA);
+    // Future which is immediately completed
+    if (jsonString != null) {
+      return Future.value(NumberTriviaModel.fromJson(json.decode(jsonString)));
+    } else {
+      throw CacheException();
+    }
+  }
+}
