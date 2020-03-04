@@ -27,8 +27,10 @@ void main() {
     mockGetRandomNumberTrivia = MockGetRandomNumberTrivia();
     mockGetConcreteNumberTrivia = MockGetConcreteNumberTrivia();
 
-    bloc = NumberTriviaBloc(mockGetConcreteNumberTrivia,
-        mockGetRandomNumberTrivia, mockInputConverter);
+    bloc = NumberTriviaBloc(
+        concrete: mockGetConcreteNumberTrivia,
+        random: mockGetRandomNumberTrivia,
+        inputConverter: mockInputConverter);
   });
 
   test('initialState should be Empty', () {
