@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architect/features/number_trivia/presentation/bloc/bloc.dart';
+import 'package:flutter_architect/features/number_trivia/presentation/widgets/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../injection_container.dart';
@@ -13,7 +14,7 @@ class NumberTriviaPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("Number Trivia"),
       ),
-      body: buildBody(context),
+      body: SingleChildScrollView(child: buildBody(context)),
     );
   }
 
@@ -36,6 +37,10 @@ class NumberTriviaPage extends StatelessWidget {
                       return MessageDisplay(message: "Start searching!");
                     } else if (state is Loading) {
                       return LoadingWidget();
+                    } else if (state is Loaded) {
+                      return TriviaDisplay(
+                        numberTrivia: state.trivia,
+                      );
                     } else if (state is Error) {
                       return MessageDisplay(message: state.message);
                     }
@@ -45,73 +50,10 @@ class NumberTriviaPage extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Column(
-                children: <Widget>[
-                  Placeholder(
-                    fallbackHeight: 40,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Placeholder(
-                          fallbackHeight: 30,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Expanded(
-                          child: Placeholder(
-                        fallbackHeight: 30,
-                      )),
-                    ],
-                  ),
-                ],
-              ),
+              TriviaControls(),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class MessageDisplay extends StatelessWidget {
-  final String message;
-
-  const MessageDisplay({Key key, @required this.message})
-      : assert(message != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 3,
-      child: Center(
-        child: SingleChildScrollView(
-          child: Text(
-            message,
-            style: TextStyle(fontSize: 25),
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height / 3,
-      child: Center(
-        child: CircularProgressIndicator(),
       ),
     );
   }
